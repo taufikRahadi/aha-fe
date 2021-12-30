@@ -9,13 +9,21 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home,
-    redirect: { name: 'Dashboard' },
-    childrens: [
+    children: [
+      {
+        path: '',
+        name: 'Landing Page',
+        component: () =>
+          import(/* webpackChunkName: 'Dashboard' */ '../views/Index.vue'),
+      },
       {
         path: 'dashboard',
         name: 'Dashboard',
         component: () =>
           import(/* webpackChunkName: 'Dashboard' */ '../views/Dashboard.vue'),
+        meta: {
+          requiresAuth: true,
+        },
       },
     ],
   },
@@ -38,6 +46,14 @@ const routes = [
         component: () =>
           import(/* webpackChunkName: 'SignUp' */ '../views/Auth/SignUp.vue'),
       },
+      {
+        name: 'Email Verification',
+        path: 'email-verification/:token',
+        component: () =>
+          import(
+            /* webpackChunkName: 'EmailVerification' */ '../views/Auth/EmailVerification.vue'
+          ),
+      },
     ],
   },
 ]
@@ -46,6 +62,17 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes,
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth) {
+    if (localStorage.getItem('access_token')) {
+      next()
+    } else {
+      router.push({ name: 'Sign In' })
+    }
+  }
+  next()
 })
 
 export default router
