@@ -20,6 +20,7 @@
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-vue": "^0.11.0",
     "vue": "^2.6.11",
+    "vue-google-signin-button-directive": "^1.0.3",
     "vue-progressbar": "^0.7.5",
     "vue-router": "^3.2.0",
     "vue-sweetalert2": "^5.0.2",
