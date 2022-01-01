@@ -157,7 +157,36 @@ export default {
       return Boolean(err)
     },
 
-    signUpWithGoogle() {},
+    signUpWithGoogle(idToken) {
+      this.loading = true
+      this.$Progress.start()
+      axiosInstance
+        .post('/auth/google', {
+          idToken,
+        })
+        .then(({ data }) => {
+          localStorage.setItem('access_token', data.token)
+          localStorage.setItem(
+            'user_info',
+            JSON.stringify({
+              fullname: data.fullname,
+              isEmailVerified: data.emailVerified,
+            }),
+          )
+          toast('Welcome!', 'success')
+          this.$Progress.finish()
+          this.$router.push({
+            name: 'Dashboard',
+          })
+        })
+        .catch(() => {
+          toast('Failed!', 'error')
+        })
+        .finally(() => {
+          this.loading = false
+          this.$Progress.finish()
+        })
+    },
 
     signUp() {
       this.loading = true
@@ -191,11 +220,12 @@ export default {
     },
 
     OnGoogleAuthSuccess(idToken) {
-      console.log(idToken)
+      this.signUpWithGoogle(idToken)
     },
 
     OnGoogleAuthFail(error) {
       console.log(error)
+      toast('Google Authentication Failed!', 'error')
     },
   },
 }

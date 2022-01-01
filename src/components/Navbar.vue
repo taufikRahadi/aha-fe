@@ -8,6 +8,9 @@
       </div>
 
       <div class="flex">
+        <router-link :to="{ name: 'Profile' }" class="mx-3"
+          >Profile</router-link
+        >
         <button @click="logout">Sign Out</button>
       </div>
     </div>
@@ -27,13 +30,13 @@ export default {
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
           cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, delete it!',
+          confirmButtonText: 'Yes, Sign Out Anyway!',
         })
         .then(({ isConfirmed }) => {
           if (isConfirmed) {
             localStorage.removeItem('user_info')
             localStorage.removeItem('access_token')
-            toast('Logout success', 'succes')
+            toast('Logout success', 'success')
             this.$router.push({
               name: 'Sign In',
             })
