@@ -172,13 +172,17 @@ export default {
           this.$Progress.finish()
         })
         .catch(({ response }) => {
-          if (response.status === 400) this.formError = response.data.message
-          response.data.message.forEach((res) => {
-            const validationErr = Object.keys(res.constraints)
-            validationErr.forEach((v) => {
-              toast(res.constraints[v], 'error')
+          if (response.status === 403) {
+            this.formError = response.data.message
+            response.data.message.forEach((res) => {
+              const validationErr = Object.keys(res.constraints)
+              validationErr.forEach((v) => {
+                toast(res.constraints[v], 'error')
+              })
             })
-          })
+          } else {
+            toast(response.data.message, 'error')
+          }
         })
         .finally(() => {
           this.loading = false
